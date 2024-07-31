@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Flask App</title>
+</head>
+<body>
+    <h1>Welcome to My Flask App!</h1>
+    <p>This is a simple HTML page served by Flask.</p>
+    <form id="form-search">
+        <input type="search" name="" id="searchInput">
+        <button type="button">pesquisar</button>
+    </form>
+    <div id="results"></div>
+
+    <script>
+        document
+        .getElementById("form-search")
+        .addEventListener("click", search, false);
+
+        function search(event) {
+            event.preventDefault();
+            const title = document.getElementById('searchInput').value;
+            const xhr = new XMLHttpRequest();
+            const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=5`;
+
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    displayResults(response)
+                }
+            };
+            xhr.send();
+        }
+
+        function displayResults(data) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            data.docs.forEach(book => {
+                const bookDiv = document.createElement('div');
+                bookDiv.innerHTML = `
+                    <h2>${book.title}</h2>
+                    <p>Author: ${book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
+                    <p>First Published Year: ${book.first_publish_year || 'N/A'}</p>
+                `;
+                resultsDiv.appendChild(bookDiv);
+            });
+        }
+    </script>
+</body>
+</html>
