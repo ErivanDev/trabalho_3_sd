@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Flask App</title>
 </head>
+
 <body>
     <h1>Welcome to My Flask App!</h1>
     <p>This is a simple HTML page served by Flask.</p>
@@ -16,39 +18,165 @@
 
     <script>
         document
-        .getElementById("form-search")
-        .addEventListener("click", search, false);
+            .getElementById("form-search")
+            .addEventListener("click", search, false);
 
         function search(event) {
             event.preventDefault();
             const title = document.getElementById('searchInput').value;
             const xhr = new XMLHttpRequest();
-            const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=5`;
+            const url = `http://localhost:5000/search?title=${encodeURIComponent(title)}&limit=5`;
 
             xhr.open('GET', url, true);
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
-                    displayResults(response)
+                    console.log(response);
+                    displayResults(response);
                 }
             };
             xhr.send();
         }
 
+        function write_review(event) {
+            event.preventDefault();
+
+            const isbn = document.getElementById('isbn').value;
+            const reviewer = "Anon"; // document.getElementById('reviewer').value;
+            const text = document.getElementById('text').value;
+            const rating = document.getElementById('rating').value;
+
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:5000/books/${isbn}/reviews`;
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 201) {
+                        alert("Review added successfully!");
+                    } else {
+                        alert("Failed to add review: " + xhr.responseText);
+                    }
+                }
+            };
+
+            const data = JSON.stringify({
+                "reviewer": reviewer,
+                "text": text,
+                "rating": rating
+            });
+
+            xhr.send(data);
+        }
+
+        function delete_review(isbn, idx) {
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:5000/books/${isbn}/reviews/${idx}`;
+            xhr.open("DELETE", url, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 201) {
+                        alert("Review added successfully!");
+                    } else {
+                        alert("Failed to add review: " + xhr.responseText);
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+
+        function rewrite_review(self, isbn, id) {
+            event.preventDefault();
+
+            // const isbn = isbn; // document.getElementById('isbn').value;
+            const reviewer = "Anon"; // document.getElementById('reviewer').value;
+            const text = self.getElementsByTagName("textarea")[0].value;
+            const rating = 5; //document.getElementById('rating').value;
+
+            const xhr = new XMLHttpRequest();
+            const url = `http://localhost:5000/books/${isbn}/reviews/${id}`;
+            xhr.open("PUT", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 201) {
+                        alert("Review added successfully!");
+                    } else {
+                        alert("Failed to add review: " + xhr.responseText);
+                    }
+                }
+            };
+
+            const data = JSON.stringify({
+                "reviewer": reviewer,
+                "text": text,
+                "rating": rating
+            });
+
+            xhr.send(data);
+        }
+
         function displayResults(data) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
-            
-            data.docs.forEach(book => {
+
+            data.docs.forEach(async book => {
                 const bookDiv = document.createElement('div');
                 bookDiv.innerHTML = `
                     <h2>${book.title}</h2>
                     <p>Author: ${book.author_name ? book.author_name.join(', ') : 'Unknown'}</p>
                     <p>First Published Year: ${book.first_publish_year || 'N/A'}</p>
+                    <p>reviews: </p>
+                    ${
+                        await new Promise((resolve, reject) => {
+                            const xhr = new XMLHttpRequest();
+                            const url = `http://localhost:5000/books/${book.isbn[0]}/reviews`;
+
+                            xhr.open('GET', url, true);
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState === 4) {
+                                    if (xhr.status === 200) {
+                                        resolve(JSON.parse(xhr.responseText));
+                                    } else {
+                                        reject(new Error(`Request failed with status ${xhr.status}`));
+                                    }
+                                }
+                            };
+                            xhr.send();
+                        }).then(reviews => {
+                            console.log('reviews', reviews)
+                            return reviews.map( (r, idx) => `
+                                <form onclick="rewrite_review(this,${book.isbn[0]},${r.id})">
+                                    <textarea id="form-review-${book.isbn[0]}-${r.id}-text">${r.text}</textarea>
+                                    <button type="button">rescrever review</button>
+                                </form>
+                                <button type="button" onclick="delete_review(${book.isbn[0]},${r.id})">delete</button>
+                            `);
+                        }).catch(() =>{
+                            return
+                        })
+                    }
+
+                    <br>
+                    <form id="form-review-${book.isbn[0]}">
+                        <textarea type="search" name="" id="text"></textarea>
+                        <input type="number" value="5" id="rating">
+                        <input type="number" value="${book.isbn[0]}" hidden="true" id="isbn">
+                        <button type="button">escrever review</button>
+                    </form>
                 `;
+
                 resultsDiv.appendChild(bookDiv);
+                document
+                    .getElementById(`form-review-${book.isbn[0]}`)
+                    .addEventListener("click", write_review, false);
             });
         }
     </script>
 </body>
+
 </html>
