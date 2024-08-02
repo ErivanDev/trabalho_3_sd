@@ -150,11 +150,11 @@
                         }).then(reviews => {
                             console.log('reviews', reviews)
                             return reviews.map( (r, idx) => `
-                                <form onclick="rewrite_review(this,${book.isbn[0]},${r.id})">
+                                <form onclick="rewrite_review(this,'${book.isbn[0]}','${r.id}')">
                                     <textarea id="form-review-${book.isbn[0]}-${r.id}-text">${r.text}</textarea>
                                     <button type="button">rescrever review</button>
                                 </form>
-                                <button type="button" onclick="delete_review(${book.isbn[0]},${r.id})">delete</button>
+                                <button type="button" onclick="delete_review('${book.isbn[0]}','${r.id}')">delete</button>
                             `);
                         }).catch(() =>{
                             return
