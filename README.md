@@ -16,6 +16,10 @@ Todar servidor
     
     python .\main.py
 
+Cliente Flutter
+
+    .\adb reverse tcp:5000 tcp:5000
+
 Requisitos da Tarefa
 
 [x] Criar um cliente REST na linguagem da sua preferência

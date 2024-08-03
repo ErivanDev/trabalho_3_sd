@@ -1,11 +1,42 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 import requests
 import pickle
 import os
 
+from dicttoxml import dicttoxml
+import library_pb2
+
 app = Flask(__name__)
 
 DATA_FILE = 'data.pkl'
+
+# Convert to protobuf
+def convert_to_protobuf(data):
+    books_proto = library_pb2.Books()
+    for book in data:
+        book_proto = books_proto.books.add()
+        book_proto.id = book['id']
+        book_proto.isbn = book['isbn']
+        book_proto.title = book['title']
+        book_proto.authors.extend(book['authors'])
+        book_proto.cover = book['cover']
+        for review in book['reviews']:
+            review_proto = book_proto.reviews.add()
+            review_proto.id = review['id']
+            review_proto.reviewer = review['reviewer']
+            review_proto.text = review['text']
+            review_proto.rating = float(review['rating'])
+    return books_proto.SerializeToString()
+
+# Utility function to convert data to XML or JSON
+def convert_response(data, response_format):
+    if response_format == 'json':
+        return jsonify(data)
+    elif response_format == 'xml':
+        xml_data = dicttoxml(data, custom_root='response', attr_type=False)
+        return Response(xml_data, mimetype='application/xml')
+    elif response_format == 'protobuf':
+        return Response(convert_to_protobuf(data), mimetype='application/x-protobuf')
 
 # Function to load data from file
 def load_data():
@@ -91,7 +122,11 @@ def add_book():
 # Get all books
 @app.route('/books', methods=['GET'])
 def get_books():
-    return jsonify(books), 200
+    response_format = request.args.get('format', 'json')
+
+    return convert_response(books, response_format)
+
+    # return jsonify(books), 200
 
 # Add a review to a book
 @app.route('/books/<isbn>/reviews', methods=['POST'])

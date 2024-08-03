@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+message Review {
+    int32 id = 1;
+    string reviewer = 2;
+    string text = 3;
+    float rating = 4;
+}
+
+message Book {
+    int32 id = 1;
+    string isbn = 2;
+    string title = 3;
+    repeated string authors = 4;
+    string cover = 5;
+    repeated Review reviews = 6;
+}
+
+message Books {
+    repeated Book books = 1;
+}
