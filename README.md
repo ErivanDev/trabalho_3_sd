@@ -47,11 +47,13 @@ Requisitos da Tarefa
 
 [ ] Rotas do tipo GET, POST e DELETE, sendo possível indicar o formato dos dados de resposta (XML ou JSON) como parâmetro da requisição
 
-[ ] Ao menos um método REST deve retornar uma resposta no formato Protocol Buffer
+[x] Ao menos um método REST deve retornar uma resposta no formato Protocol Buffer
+    [ ] Mais endpoints poderiam receber Protocol, talvez os clientes podessem enviar
 
 [x] Um cliente web
+    [ ] Usar protobuf, até o momento só o servidor está retornando, mas o cliente não recupera os dados
 
-[ ] Um cliente mobile
+[x] Um cliente mobile
 
 [ ] Vídeo de no máximo 5 min demonstrando a execução das funcionalidades, processamento
 
