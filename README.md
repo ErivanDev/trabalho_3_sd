@@ -43,7 +43,7 @@ Requisitos da Tarefa
 
 [x] Dar like nas reviews
 
-[ ] Um documento de especificação contendo todas as rotas da API a serem implementadas
+[x] Um documento de especificação contendo todas as rotas da API a serem implementadas
 
 [x] Rotas do tipo GET, POST e DELETE, sendo possível indicar o formato dos dados de resposta (XML ou JSON) como parâmetro da requisição
 

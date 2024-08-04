@@ -1,0 +1,379 @@
+openapi: 3.0.3
+info:
+  title: Biblioteca API
+  description: API para gerenciar livros e avaliações
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /:
+    get:
+      summary: Página inicial
+      responses:
+        '200':
+          description: Página inicial exibida com sucesso
+          content:
+            text/html:
+              schema:
+                type: string
+  /search:
+    get:
+      summary: Pesquisar livros
+      parameters:
+        - name: title
+          in: query
+          description: Título do livro a ser pesquisado
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Número máximo de resultados
+          required: false
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Lista de livros encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Nenhum livro encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+  /books:
+    get:
+      summary: Obter todos os livros
+      parameters:
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml, protobuf)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Lista de todos os livros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+            application/xml:
+              schema:
+                type: string
+            application/x-protobuf:
+              schema:
+                type: string
+  /books/{isbn}/reviews:
+    post:
+      summary: Adicionar uma avaliação a um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '201':
+          description: Avaliação adicionada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+    get:
+      summary: Obter todas as avaliações de um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Lista de avaliações
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+  /books/{isbn}/reviews/{id}:
+    put:
+      summary: Atualizar uma avaliação de um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID da avaliação
+          required: true
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Review'
+      responses:
+        '200':
+          description: Avaliação atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Livro ou avaliação não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+    delete:
+      summary: Deletar uma avaliação de um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID da avaliação
+          required: true
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Avaliação deletada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Livro ou avaliação não encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+  /likes:
+    get:
+      summary: Obter todas as favoritas
+      parameters:
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Lista de favoritos
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+  /likes/{isbn}:
+    get:
+      summary: Obter todas as avaliações favoritas de um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Lista de avaliações favoritas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            application/xml:
+              schema:
+                type: string
+        '404':
+          description: Livro não encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+  /likes/{isbn}/{id}:
+    post:
+      summary: Favoritar uma avaliação de um livro
+      parameters:
+        - name: isbn
+          in: path
+          description: ISBN do livro
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: ID da avaliação
+          required: true
+          schema:
+            type: integer
+        - name: format
+          in: query
+          description: Formato da resposta (json, xml)
+          required: false
+          schema:
+            type: string
+            default: json
+      responses:
+        '200':
+          description: Avaliação favoritada com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+            application/xml:
+              schema:
+                type: string
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        isbn:
+          type: string
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        cover:
+          type: string
+        reviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+    Review:
+      type: object
+      properties:
+        id:
+          type: integer
+        reviewer:
+          type: string
+        text:
+          type: string
+        rating:
+          type: number
+          format: float
