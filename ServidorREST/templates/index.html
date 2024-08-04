@@ -59,7 +59,8 @@
                             <button type="button" onclick="rewrite_review(this,'${isbn}','${newData.id}')">reescrever</button>
                             <button type="button" onclick="favorite_review(this,'${isbn[0]}','${newData.id}')">favoritar</button>
                             <button type="button" onclick="delete_review('${isbn}','${newData.id}')">delete</button>
-                            <div style="width:50px" id="like-${isbn[0]}-${newData.id}">like</div>
+                            <div style="width:50px" id="like-${isbn[0]}-${newData.id}">Favoritado</div>
+                            
                         </div>
                         `
 
@@ -140,11 +141,10 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     if (xhr.status === 200) {
-                        // alert("Review added successfully!");
-                        const newData = JSON.parse(xhr.responseText);
-                        document.getElementById(`like-${isbn[0]}-${id}`).style.backgroundColor = "green";
-                    } else {
-                        // alert("Failed to add review: " + xhr.responseText);
+                        // Altere o texto do botão para "Favoritado" e mude a cor
+                        self.textContent = "Favoritado";
+                        self.style.color = "#34D399"; // Cor verde para indicar favoritado
+                        self.disabled = true; // Desabilita o botão após favoritar
                     }
                 }
             };
@@ -208,7 +208,7 @@
                                             };
                                             xhr.send();
 
-                                            return `<div style="width:50px" id="like-${book.isbn[0]}-${r.id}">like</div>`
+                                            return `<div style="width:50px" id="like-${book.isbn[0]}-${r.id}">Favoritado</div>`
                                         })()
                                     }
                                 </div>
