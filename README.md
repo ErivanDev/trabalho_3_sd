@@ -28,9 +28,9 @@ Requisitos da Tarefa
 
 [x] Realizar as operações invocando o método adequado
 
-[ ] Fazer uma análise usando o Console do Postman de como são as requisições e as respostas em termos de cabeçalho e payload
+[x] Fazer uma análise usando o Console do Postman de como são as requisições e as respostas em termos de cabeçalho e payload
 
-[ ] No caso das requisições POST, quais seriam as diferenças e similaridades se fosse uma página Web enviando dados de um formulário para o servidor?
+[x] No caso das requisições POST, quais seriam as diferenças e similaridades se fosse uma página Web enviando dados de um formulário para o servidor?
 
 [x] Criar um Servidor REST
 
@@ -41,17 +41,15 @@ Requisitos da Tarefa
     - delete_review
     - get_reviews 
 
-[ ] Dar like nas reviews
+[x] Dar like nas reviews
 
 [ ] Um documento de especificação contendo todas as rotas da API a serem implementadas
 
-[ ] Rotas do tipo GET, POST e DELETE, sendo possível indicar o formato dos dados de resposta (XML ou JSON) como parâmetro da requisição
+[x] Rotas do tipo GET, POST e DELETE, sendo possível indicar o formato dos dados de resposta (XML ou JSON) como parâmetro da requisição
 
 [x] Ao menos um método REST deve retornar uma resposta no formato Protocol Buffer
-    [ ] Mais endpoints poderiam receber Protocol, talvez os clientes podessem enviar
 
 [x] Um cliente web
-    [ ] Usar protobuf, até o momento só o servidor está retornando, mas o cliente não recupera os dados
 
 [x] Um cliente mobile
 
