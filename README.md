@@ -1,3 +1,11 @@
+# Trabalho 3 de Sistemas Distribuidos
+
+Foi programado um cliente de uma calculadora disponibilizados pelos professores, presente em **ClienteCalCuladoraREST**, utilizando python, a biblioteca requests para fazer requisições HTTP, e a biblioteca tkinter para a interface gráfica.
+
+Foi programado um servidor REST usando python, a biblioteca flask. O servidor disponibiliza uma página HTML para fazer requisições, disponível em **ServidorREST**.
+
+Foi programado um cliente mobile usando o flutter disponível em **cliente_mobile**
+
 Criar ambiente virtual python
 
     python -m virtualenv env
@@ -53,6 +61,6 @@ Requisitos da Tarefa
 
 [x] Um cliente mobile
 
-[ ] Vídeo de no máximo 5 min demonstrando a execução das funcionalidades, processamento
+[x] Vídeo de no máximo 5 min demonstrando a execução das funcionalidades, processamento
 
-[ ] Comparar os tipos de representação de dados usados (XML, JSON e Protocol Buffer)
+[x] Comparar os tipos de representação de dados usados (XML, JSON e Protocol Buffer)
