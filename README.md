@@ -64,3 +64,6 @@ Requisitos da Tarefa
 [x] Vídeo de no máximo 5 min demonstrando a execução das funcionalidades, processamento
 
 [x] Comparar os tipos de representação de dados usados (XML, JSON e Protocol Buffer)
+
+
+video demonstrativo: https://drive.google.com/file/d/1HTkSnYK8NqOmh-FdRIzrsIfqFhKTJ7vE/view?usp=drivesdk
